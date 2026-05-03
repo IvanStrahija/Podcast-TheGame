@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Podcast – The Game</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ============ SCREEN: INTRO ============ -->
+  <div id="screen-intro" class="screen active">
+    <div class="intro-bg">
+      <div class="waveform-deco" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="intro-content">
+      <div class="mic-icon" aria-hidden="true">🎙️</div>
+      <h1 class="game-title">PODCAST</h1>
+      <p class="game-subtitle">— The Game —</p>
+      <p class="game-tagline">Grab the mic. Spill the takes. Make it iconic.</p>
+      <button class="btn btn-primary btn-xl" id="btn-start-setup">Let's Record</button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: SETUP ============ -->
+  <div id="screen-setup" class="screen">
+    <div class="setup-container">
+      <h2 class="screen-title">Episode Setup</h2>
+
+      <div class="setup-section">
+        <label class="setup-label">Number of Players</label>
+        <div class="player-count-controls">
+          <button class="btn btn-icon" id="btn-players-minus">−</button>
+          <span id="player-count-display" class="count-display">4</span>
+          <button class="btn btn-icon" id="btn-players-plus">+</button>
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <label class="setup-label">Player Names</label>
+        <div id="player-name-inputs" class="player-inputs"></div>
+      </div>
+
+      <div class="setup-section">
+        <label class="setup-label">Episode Length</label>
+        <div class="turns-options">
+          <button class="btn btn-option active" data-turns="10">Short<span>~10 turns</span></button>
+          <button class="btn btn-option" data-turns="20">Full<span>~20 turns</span></button>
+          <button class="btn btn-option" data-turns="30">Extended<span>~30 turns</span></button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-xl" id="btn-begin-game">Start Recording 🔴</button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: GAME BOARD ============ -->
+  <div id="screen-board" class="screen">
+    <div class="board-layout">
+
+      <!-- Left Panel: Player Info -->
+      <div class="panel-left">
+        <div class="current-player-card">
+          <div class="on-air-badge">ON AIR</div>
+          <div class="current-player-label">Now Recording</div>
+          <div class="current-player-name" id="current-player-name">—</div>
+          <div class="turn-counter" id="turn-counter">Turn 1</div>
+        </div>
+
+        <div class="players-list" id="players-list"></div>
+
+        <button class="btn btn-accent" id="btn-highlights-peek">⭐ Highlights (<span id="highlight-count">0</span>)</button>
+      </div>
+
+      <!-- Center: Board -->
+      <div class="panel-center">
+        <div class="board-wrapper">
+          <div id="game-board" class="game-board"></div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Actions -->
+      <div class="panel-right">
+        <div class="dice-section">
+          <div class="dice-display" id="dice-display">
+            <div class="dice" id="dice">
+              <div class="dice-face" data-face="1">⚀</div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg" id="btn-roll-dice">Roll Dice</button>
+        </div>
+
+        <div class="space-info-card" id="space-info-card">
+          <div class="space-info-type" id="space-info-type">—</div>
+          <div class="space-info-desc" id="space-info-desc">Roll the dice to move!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: CARD DISPLAY ============ -->
+  <div id="modal-card" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="card-category-badge" id="card-category-badge">Discussion</div>
+      <div class="card-title" id="card-title"></div>
+      <div class="card-prompt" id="card-prompt"></div>
+
+      <div class="discussion-mode" id="discussion-mode">
+        <div class="timer-section" id="timer-section">
+          <div class="timer-display" id="timer-display">2:00</div>
+          <div class="timer-controls">
+            <button class="btn btn-sm btn-ghost" id="btn-timer-toggle">⏸ Pause</button>
+            <button class="btn btn-sm btn-ghost" id="btn-timer-reset">↺ Reset</button>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn btn-highlight" id="btn-mark-highlight">⭐ Mark Highlight</button>
+          <button class="btn btn-ghost btn-sm" id="btn-skip-card">Skip Card</button>
+          <button class="btn btn-primary" id="btn-next-turn">Next Turn →</button>
+        </div>
+
+        <div class="highlight-form hidden" id="highlight-form">
+          <p class="highlight-form-title">What kind of highlight?</p>
+          <div class="highlight-type-btns">
+            <button class="btn btn-sm btn-highlight-type" data-type="funniest">😂 Funniest Moment</button>
+            <button class="btn btn-sm btn-highlight-type" data-type="quote">💬 Best Quote</button>
+            <button class="btn btn-sm btn-highlight-type" data-type="player">🏆 Best Player</button>
+          </div>
+          <input type="text" id="highlight-note" placeholder="Add a note (optional)..." class="highlight-input" />
+          <button class="btn btn-primary btn-sm" id="btn-save-highlight">Save Highlight</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: HIGHLIGHTS LIST ============ -->
+  <div id="modal-highlights" class="modal-overlay hidden">
+    <div class="modal-panel">
+      <h3 class="modal-title">⭐ Episode Highlights</h3>
+      <div id="highlights-list" class="highlights-list"></div>
+      <button class="btn btn-ghost" id="btn-close-highlights">Close</button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: END GAME ============ -->
+  <div id="screen-end" class="screen">
+    <div class="end-container">
+      <div class="end-header">
+        <div class="end-icon">🎙️</div>
+        <h2 class="end-title">That's a Wrap!</h2>
+        <p class="end-subtitle">Episode complete. Here's your recap.</p>
+      </div>
+
+      <div class="recap-section">
+        <h3 class="recap-title">⭐ Episode Highlights</h3>
+        <div id="recap-highlights" class="recap-highlights"></div>
+      </div>
+
+      <div class="recap-section">
+        <h3 class="recap-title">🏆 Fan Votes</h3>
+        <div class="vote-options" id="vote-options"></div>
+      </div>
+
+      <div class="confetti-zone" id="confetti-zone" aria-hidden="true"></div>
+
+      <button class="btn btn-primary btn-xl" id="btn-restart">New Episode 🔴</button>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
